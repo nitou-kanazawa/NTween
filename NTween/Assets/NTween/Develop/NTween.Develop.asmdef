@@ -1,0 +1,16 @@
+{
+    "name": "NTween.Develop",
+    "rootNamespace": "NTween.Develop",
+    "references": [
+        "GUID:ef1f36e3f56dca0428fdd4ab63e2981b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
