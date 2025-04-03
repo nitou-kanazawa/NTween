@@ -1,0 +1,19 @@
+{
+    "name": "NTween.Editor",
+    "rootNamespace": "NTween.Editor",
+    "references": [
+        "Unity.Mathematics",
+        "NTween"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,6 +1,6 @@
 {
     "name": "NTween.Tests",
-    "rootNamespace": "NTween.Tests",
+    "rootNamespace": "NTween.Tests.Runtime",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
