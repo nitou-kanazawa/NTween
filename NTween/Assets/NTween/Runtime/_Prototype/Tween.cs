@@ -3,24 +3,35 @@ using UnityEngine;
 using NTween.Internal;
 
 namespace NTween {
+     
 
-    public class Tween {
+
+    public partial class Tween<TValue> {
+
         public int Index { get; internal set; }
         public bool IsRegistered {
             get => Index > 0;
         }
 
         public UpdateTiming Timing { get; protected set; } = UpdateTiming.Update;
-        
+
+
+        // 
+        public readonly TValue from;
+        public readonly TValue to;
+        internal TweenParams _params;
+
         // Time
         protected float _duration;
         protected float _elapsedTime;
 
-        // 
-        protected bool _isPlaying;
+        internal TweenStatus _status;
 
 
         /// ----------------------------------------------------------------------------
+
+        internal Tween() {
+        }
 
         internal Tween(float duration) {
             _duration = duration;
@@ -28,20 +39,31 @@ namespace NTween {
             _isPlaying = true;
         }
 
-        internal virtual void OnUpdate() { }
+        internal virtual void OnUpdate(float deltaTime) {
+            
+
+        }
+
+        internal void Reset() {
+            _status = TweenStatus.None;
+        }
 
         // TweenÇîjä¸
         public void Kill() {
             if (IsRegistered) {
                 TweenDispatcher.Unregister(this, Timing);
             }
-        }
+        }    
+    }
 
+
+
+
+    public partial class Tween {
 
         /// ----------------------------------------------------------------------------
         #region Static
-
-        // TweenÇê∂ê¨
+        
         public static FloatTween To(Func<float> getter, Action<float> setter, float endValue, float duration) {
             var tween = new FloatTween(getter, setter, endValue, duration);
             tween._onComplete = t => t.Kill();
@@ -49,13 +71,12 @@ namespace NTween {
             TweenDispatcher.Register(tween, tween.Timing);
             return tween;
         }
-
         #endregion
+
     }
 
 
-
-    public class FloatTween : Tween {
+    public class FloatTween : Tween<float> {
 
         // Properity
         private Action<float> _setter;
@@ -77,7 +98,7 @@ namespace NTween {
             _endValue = endValue;
         }
 
-        internal override void OnUpdate() {
+        internal override void OnUpdate(float deltaTime) {
             if (!_isPlaying) return;
 
             _elapsedTime += Time.deltaTime;

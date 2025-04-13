@@ -1,7 +1,3 @@
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-#define NTWEEN_DEBUG
-#endif
-
 using System;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -26,14 +22,29 @@ namespace NTween {
             if (_buffer == null)
                 return;
 
-            _buffer.ResetValues();
+            TweenBuilderBuffer<TValue>.Return(_buffer);
             _buffer = null;
         }
 
 
+        /// ----------------------------------------------------------------------------
+        #region With
+
         public readonly TweenBuilder<TValue> WithEase(Ease ease) {
             CheckBuffer();
             _buffer.ease = ease;
+            return this;
+        }
+
+        public readonly TweenBuilder<TValue> WithOnComplete(Action callback) {
+            CheckBuffer();
+            _buffer.onCompleteAction += callback;
+            return this;
+        }
+
+        public readonly TweenBuilder<TValue> WithOnCancel(Action callback) {
+            CheckBuffer();
+            _buffer.onCancelAction += callback;
             return this;
         }
 
@@ -44,87 +55,50 @@ namespace NTween {
 #endif
             return this;
         }
+        #endregion
+
+
+        /// ----------------------------------------------------------------------------
+        #region Bind
+
+        public TweenHandle Bind(Action<TValue> action) {
+            CheckBuffer();
+            SetCallbackData(action);
+            return ScheduleTween();
+        }
+
+        #endregion
+
+
+        internal TweenHandle ScheduleTween() {
+            TweenHandle handle;
+
+
+            Dispose();
+
+            throw new System.NotImplementedException();
+            return handle;
+        }
+
+
+        /// ----------------------------------------------------------------------------
+        // 
+
+        internal readonly void SetCallbackData(Action<TValue> action) {
+            _buffer.stateCount = 0;
+            _buffer.updateAction = action;
+        }
 
 
         /// ----------------------------------------------------------------------------
         // Private Method
 
-        readonly void CheckBuffer() {
+        private readonly void CheckBuffer() {
             if (_buffer == null || _buffer.version != _version) 
                 throw new InvalidOperationException("MotionBuilder is either not initialized or has already run a Build (or Bind).");
         }
     }
 
 
-    /// <summary>
-    /// Tweenのパラメータを格納するクラス．
-    /// インスタンスをObject-Poolで管理することで余計なアロケーションを避ける方針．
-    /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    internal sealed class TweenBuilderBuffer<TValue> {
-
-        public ushort version;
-
-        public TValue startValue;
-        public TValue endValue;
-
-        public float duration;
-        public float delay;
-        public Ease ease;
-
-        // バインド用
-        public object state0;
-        public object state1;
-        public object state2;
-
-        // Callback
-        public Action onCompleteAction;
-
-#if NTWEEN_DEBUG
-        public string debugName;
-#endif
-
-
-        public void ResetValues() {
-
-            version++;              // なぜインクリメントなのか分からない
-
-            startValue = default;
-            endValue = default;
-
-            duration = default;
-            delay = default;
-            ease = default;
-
-            state0 = default;
-            state1 = default;
-            state2 = default;
-
-#if NTWEEN_DEBUG
-            debugName = default;
-#endif
-        }
-
-
-        /// ----------------------------------------------------------------------------
-        #region Static
-
-        private static readonly ObjectPool<TweenBuilderBuffer<TValue>> _pool =
-            new (
-                createFunc: () => new TweenBuilderBuffer<TValue>(),
-                actionOnRelease: buffer => buffer.ResetValues(),
-                collectionCheck: false, // デフォルトではtrueだが、falseにすることで二重解放のチェックを無効化できる
-                defaultCapacity: 10,    // 初期容量
-                maxSize: 100            // 最大保持数
-            );
-
-        public static TweenBuilderBuffer<TValue> Rent() {
-            return _pool.Get();
-        }
-
-        public static void Return(TweenBuilderBuffer<TValue> buffer) {
-            _pool.Release(buffer);
-        }
-        #endregion
-    }
+    
 }
