@@ -18,6 +18,7 @@ namespace NTween {
 
         // 
         public readonly TValue from;
+
         public readonly TValue to;
         internal TweenParams _params;
 

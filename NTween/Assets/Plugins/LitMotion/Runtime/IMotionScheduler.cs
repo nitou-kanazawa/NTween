@@ -1,10 +1,10 @@
-namespace LitMotion
-{
+namespace LitMotion {
+
     /// <summary>
     /// Provides the function to schedule the execution of a motion.
     /// </summary>
-    public interface IMotionScheduler
-    {
+    public interface IMotionScheduler {
+
         /// <summary>
         /// Schedule the motion.
         /// </summary>
@@ -22,8 +22,7 @@ namespace LitMotion
     /// <summary>
     /// Type of time used to play the motion
     /// </summary>
-    public enum MotionTimeKind : byte
-    {
+    public enum MotionTimeKind : byte {
         Time = 0,
         UnscaledTime = 1,
         Realtime = 2

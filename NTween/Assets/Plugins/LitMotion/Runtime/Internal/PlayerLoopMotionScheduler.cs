@@ -4,15 +4,14 @@ using UnityTime = UnityEngine.Time;
 using UnityEditor;
 #endif
 
-namespace LitMotion
-{
-    internal sealed class PlayerLoopMotionScheduler : IMotionScheduler
-    {
+namespace LitMotion {
+
+    internal sealed class PlayerLoopMotionScheduler : IMotionScheduler {
+        
         public readonly PlayerLoopTiming playerLoopTiming;
         public readonly MotionTimeKind timeKind;
 
-        internal PlayerLoopMotionScheduler(PlayerLoopTiming playerLoopTiming, MotionTimeKind timeKind)
-        {
+        internal PlayerLoopMotionScheduler(PlayerLoopTiming playerLoopTiming, MotionTimeKind timeKind) {
             this.playerLoopTiming = playerLoopTiming;
             this.timeKind = timeKind;
         }
@@ -20,17 +19,13 @@ namespace LitMotion
         public MotionHandle Schedule<TValue, TOptions, TAdapter>(ref MotionBuilder<TValue, TOptions, TAdapter> builder)
             where TValue : unmanaged
             where TOptions : unmanaged, IMotionOptions
-            where TAdapter : unmanaged, IMotionAdapter<TValue, TOptions>
-        {
+            where TAdapter : unmanaged, IMotionAdapter<TValue, TOptions> {
             builder.buffer.TimeKind = timeKind;
 
 #if UNITY_EDITOR
-            if (EditorApplication.isPlaying)
-            {
+            if (EditorApplication.isPlaying) {
                 return MotionDispatcher.Schedule(ref builder, playerLoopTiming);
-            }
-            else
-            {
+            } else {
                 return EditorMotionDispatcher.Schedule(ref builder);
             }
 #else

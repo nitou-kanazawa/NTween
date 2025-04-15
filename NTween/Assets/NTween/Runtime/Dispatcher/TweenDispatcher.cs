@@ -30,9 +30,9 @@ namespace NTween.Internal {
             // PlayerLoopにコールバック登録
             var loop = PlayerLoop.GetCurrentPlayerLoop();
             {
-                var earlyUpdateSystem = new PlayerLoopSystem { 
-                    updateDelegate = OnUpdate, 
-                    type = typeof(TweenDispatcher) 
+                var earlyUpdateSystem = new PlayerLoopSystem {
+                    updateDelegate = OnUpdate,
+                    type = typeof(TweenDispatcher)
                 };
 
                 // ※対象インデックスを検索し，木構造に挿入する
